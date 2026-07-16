@@ -1,28 +1,47 @@
-# Django MongoDB Backend - Project Template
+# Django MongoDB MQL Panel
 
-This is a Django project starter template for the Django MongoDB Backend.
-In order to use it with your version of Django: 
+Configure the MongoDB Query Language (MQL) panel in Django MongoDB Extensions to use with the Django Debug Toolbar, built with a World Cup 2026 analytics app.
 
-- Find your Django version. To do so from the command line, make sure you
-  have Django installed and run:
+## Prerequisites
 
-```bash
-django-admin --version
->> 6.0
-```
+- Python 3.13+
+- MongoDB Atlas cluster (or local MongoDB instance)
+- Django 6.0+
 
-## Create the Django project
+## Setup
 
-From your shell, run the following command to create a new Django project
-replacing the `{{ project_name }}` and `{{ version }}` sections. 
+1. Clone the repo and create a virtual environment:
 
 ```bash
-django-admin startproject {{ project_name }} --template https://github.com/mongodb-labs/django-mongodb-project/archive/refs/heads/{{ version }}.x.zip
+git clone https://github.com/YOUR_USERNAME/django-mongodb-mql-panel.git
+cd django-mongodb-mql-panel
+python -m venv venv
+source venv/bin/activate
 ```
 
-For a project named `example` that runs on `django==6.0.*`
-the command would look like this:
+2. Install dependencies:
 
 ```bash
-django-admin startproject example --template https://github.com/mongodb-labs/django-mongodb-project/archive/refs/heads/6.0.x.zip
+pip install django-mongodb-backend django-mongodb-extensions
 ```
+
+3. Set your MongoDB connection string:
+
+```bash
+export MONGODB_URI="mongodb+srv://<username>:<password>@<cluster>.mongodb.net/worldcup?retryWrites=true&w=majority"
+```
+
+4. Run migrations and load data:
+
+```bash
+python manage.py migrate
+python manage.py load_matches
+```
+
+5. Start the server:
+
+```bash
+python manage.py runserver
+```
+
+6. Visit [http://localhost:8000](http://localhost:8000) and use the Django Debug Toolbar's MQL panel to inspect queries.

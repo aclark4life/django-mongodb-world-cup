@@ -1,0 +1,33 @@
+{% extends "world_cup/base.html" %}
+
+{% block title %}World Cup 2026 — Home{% endblock %}
+
+{% block content %}
+<header>
+    <h1>⚽ World Cup 2026 Stats</h1>
+</header>
+
+<div class="card">
+    <a href="{% url 'tournament_goals' %}">
+        <span class="badge">Aggregation</span>
+        <h3>Total Goals</h3>
+        <p>Sum of all goals scored — view the MQL query in the Debug Toolbar</p>
+    </a>
+</div>
+
+<div class="card">
+    <a href="{% url 'top_scorers' %}">
+        <span class="badge">Pipeline</span>
+        <h3>Top Scorers</h3>
+        <p>$unwind + $group pipeline — view execution time in the MQL panel</p>
+    </a>
+</div>
+
+<div class="card">
+    <a href="{% url 'query_shell' %}">
+        <span class="badge">Interactive</span>
+        <h3>Query Shell</h3>
+        <p>Run find queries and aggregation pipelines </p>
+    </a>
+</div>
+{% endblock %}

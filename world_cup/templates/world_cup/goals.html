@@ -1,0 +1,16 @@
+{% extends "world_cup/base.html" %}
+
+{% block title %}Total Goals — World Cup 2026{% endblock %}
+
+{% block content %}
+<a href="/" class="back-link">← Back to Home</a>
+<header>
+    <h1>Tournament Goals</h1>
+    <p>Total goals across all completed matches</p>
+</header>
+
+<div class="card" style="text-align: center; padding: 3rem;">
+    <div class="stat-value">{{ total_goals }}</div>
+    <div class="stat-label">goals scored</div>
+</div>
+{% endblock %}

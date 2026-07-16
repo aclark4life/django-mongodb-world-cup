@@ -1,0 +1,202 @@
+{% extends "world_cup/base.html" %}
+
+{% block title %}Query Shell — World Cup 2026{% endblock %}
+
+{% block content %}
+<a href="/" class="back-link">← Back to Home</a>
+<header>
+    <h1>Query Shell</h1>
+    <p>Each query reloads the page — check the MQL panel in the Debug Toolbar</p>
+</header>
+
+<div class="shell">
+    <div class="shell-output" id="output">
+        {% if not last_query %}
+        <div class="shell-line system">Click an example or type a query:</div>
+        <div class="shell-line system"></div>
+        <div class="shell-line system" style="color: var(--mdb-gray); opacity: 0.6;">— Queries (find) —</div>
+        <div class="shell-line example" data-query="team France">team France</div>
+        <div class="shell-line example" data-query="team England">team England</div>
+        <div class="shell-line example" data-query="round Quarter-final">round Quarter-final</div>
+        <div class="shell-line system"></div>
+        <div class="shell-line system" style="color: var(--mdb-gray); opacity: 0.6;">— Aggregation Pipelines —</div>
+        <div class="shell-line example" data-query="top scorers">top scorers</div>
+        <div class="shell-line example" data-query="goals by round">goals by round</div>
+        <div class="shell-line example" data-query="goals">goals</div>
+        {% endif %}
+
+        {% if last_query %}
+        <div class="shell-line query">{{ last_query }}</div>
+        {% endif %}
+
+        {% if error %}
+        <div class="shell-line error">{{ error }}</div>
+        {% endif %}
+
+        {% if mongo_query %}
+        <div class="shell-line mongo-query">{{ mongo_query }}</div>
+        {% endif %}
+
+        {% if results %}
+        <div class="shell-line result">
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        {% for key in results.0.keys %}
+                        <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                    <tr>
+                        {% for val in row.values %}
+                        <td>{{ val|default:"—" }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+
+    <form method="post" action="{% url 'query_shell' %}" class="shell-input-row">
+        {% csrf_token %}
+        <span class="prompt">▶</span>
+        <input type="text" name="query" id="query-input" value="" placeholder="e.g. team France, top scorers, round Quarter-final" autofocus>
+    </form>
+</div>
+
+<style>
+    .shell {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+    }
+
+    .shell-output {
+        padding: 1.5rem;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    .shell-line {
+        margin-bottom: 0.4rem;
+        line-height: 1.5;
+    }
+
+    .shell-line.system {
+        color: var(--text-secondary);
+    }
+
+    .shell-line.query {
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    .shell-line.query::before {
+        content: "▶ ";
+        opacity: 0.5;
+    }
+
+    .shell-line.mongo-query {
+        color: var(--text-secondary);
+        font-size: 0.78rem;
+        padding-left: 1rem;
+        background: var(--page-bg);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        margin: 0.3rem 0;
+        overflow-x: auto;
+    }
+
+    .shell-line.result {
+        color: var(--text-primary);
+        padding-left: 0;
+    }
+
+    .shell-line.error {
+        color: #c0392b;
+    }
+
+    .shell-line.example {
+        color: var(--accent);
+        cursor: pointer;
+        padding-left: 1rem;
+        opacity: 0.8;
+    }
+
+    .shell-line.example::before {
+        content: "▶ ";
+        opacity: 0.4;
+    }
+
+    .shell-line.example:hover {
+        opacity: 1;
+        text-decoration: underline;
+    }
+
+    .shell-input-row {
+        display: flex;
+        align-items: center;
+        border-top: 1px solid var(--border);
+        padding: 0.75rem 1.5rem;
+        background: var(--page-bg);
+    }
+
+    .prompt {
+        color: var(--accent);
+        margin-right: 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .shell-input-row input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: inherit;
+    }
+
+    .shell-input-row input::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.5;
+    }
+
+    .result-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.5rem 0;
+    }
+
+    .result-table th {
+        color: var(--text-secondary);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        text-align: left;
+        padding: 0.3rem 0.75rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .result-table td {
+        padding: 0.3rem 0.75rem;
+        font-size: 0.8rem;
+        color: var(--text-primary);
+    }
+</style>
+
+<script>
+document.querySelectorAll('.shell-line.example').forEach(el => {
+    el.addEventListener('click', () => {
+        document.getElementById('query-input').value = el.dataset.query;
+        el.closest('.shell').querySelector('form').submit();
+    });
+});
+</script>
+{% endblock %}

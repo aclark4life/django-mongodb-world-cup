@@ -1,8 +1,8 @@
-# Django MongoDB MQL Panel
+# Django MongoDB World Cup
 
-Configure the MongoDB Query Language (MQL) panel in Django MongoDB Extensions to use with the Django Debug Toolbar, built with a World Cup 2026 analytics app.
+A World Cup 2026 analytics app built with Django and MongoDB.
 
-**Repository:** https://github.com/AfiMaameDufie/django-mongodb-mql-panel — feel free to fork it or clone it as-is to get started.
+**Repository:** https://github.com/aclark4life/django-mongodb-world-cup — feel free to fork it or clone it as-is to get started.
 
 ## Prerequisites
 
